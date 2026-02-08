@@ -35,3 +35,6 @@ api_keys.yaml
 htmlcov/
 .pytest_cache/
 .mypy_cache/
+
+# Code Agents
+.claude

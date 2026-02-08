@@ -1,4 +1,9 @@
-AI Authored, some human auditing of functionality and editing of documentation
+## WARNING ##
+Documentation from another project, currently INVALID.
+
+
+AI Authored. Some human auditing of functionality and editing of documentation.
+Only included tests and ./scripts tests have been performed.
 
 # OpenAI-Compatible Chat Completion Server
 

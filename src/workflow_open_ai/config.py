@@ -13,7 +13,7 @@ class ServerConfig(BaseModel):
     """Server binding configuration."""
 
     host: str = "0.0.0.0"
-    port: int = Field(default=8000, ge=1, le=65535)
+    port: int = Field(default=8340, ge=1, le=65535)
 
 
 class AuthConfig(BaseModel):

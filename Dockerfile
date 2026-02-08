@@ -25,7 +25,7 @@ COPY config.yaml ./
 COPY api_keys.yaml.example ./
 
 # Expose default port (override via config.yaml or docker-compose)
-EXPOSE 8000
+EXPOSE 8340
 
 # Run the application
-CMD ["uv", "run", "uvicorn", "workflow_open_ai.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uv", "run", "uvicorn", "workflow_open_ai.main:app", "--host", "0.0.0.0", "--port", "8340"]
