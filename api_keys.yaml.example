@@ -1,0 +1,15 @@
+# API Keys Configuration
+# Copy to api_keys.yaml and fill in your actual keys.
+#
+# Extra fields beyond caller_key and openai_key are passed through
+# to workflows via the request context.
+#
+# Generate secure caller keys:
+#   python -c "import secrets; print('sk-' + secrets.token_hex(32))"
+
+keys:
+  - caller_key: "sk-your-caller-key-here"
+    openai_key: "sk-your-openai-key-here"
+    # Add any extra fields you want available in workflows:
+    # org_name: "my-org"
+    # tier: "premium"
