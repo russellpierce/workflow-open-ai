@@ -1,171 +1,113 @@
-## WARNING ##
-Documentation from another project, currently INVALID.
+# workflow-open-ai
 
-
-AI Authored. Some human auditing of functionality and editing of documentation.
-Only included tests and ./scripts tests have been performed.
-
-# OpenAI-Compatible Chat Completion Server
-
-A FastAPI server that exposes an OpenAI-compatible `/v1/chat/completions` endpoint, routing requests to a customizable workflow function.
+FastAPI server exposing OpenAI-compatible API for custom workflows. Each workflow file in `workflows/` auto-registers as a model.
 
 ## Features
 
-- OpenAI-compatible API endpoints (`/v1/chat/completions`, `/v1/models`)
-- API key authentication
-- Configurable via YAML
-- Docker deployment ready
-- Pre-commit hooks for code quality
+- OpenAI-compatible endpoints (`/v1/chat/completions`, `/v1/models`)
+- Auto-discover workflows from `workflows/` dir
+- Bearer token authentication
+- YAML config
+- Docker ready
 
 ## Quick Start
-
-### With Docker Compose
-
-```bash
-# Copy example API keys file and add your keys
-cp api_keys.txt.example api_keys.txt
-
-# Start the server
-docker compose up --build
-```
 
 ### Local Development
 
 ```bash
-# Install dependencies
 uv sync --all-extras
-
-# Install pre-commit hooks
 uv run pre-commit install
+cp api_keys.yaml.example api_keys.yaml
+uv run uvicorn workflow_open_ai.main:app --reload
+```
 
-# Copy example API keys file
-cp api_keys.txt.example api_keys.txt
+### Docker
 
-# Start the server
-uv run uvicorn skeleton_open_ai.main:app --reload
+```bash
+docker compose up --build
 ```
 
 ## Configuration
 
-All configuration is in `config.yml`:
-
+`config.yaml`:
 ```yaml
-# Server binding
 server:
   host: "0.0.0.0"
-  port: 8000
-
-# Authentication
+  port: 8340
 auth:
-  api_keys_file: "api_keys.txt"
-
-# Available models
-models:
-  - default_workflow
-
-# CORS settings
+  api_keys_file: "api_keys.yaml"
+workflows_dir: "./workflows"
 cors:
-  allow_origins:
-    - "*"
+  allow_origins: ["*"]
 ```
 
-### API Key Management
-
-Add API keys to `api_keys.txt` (one per line, comments start with `#`):
-
-```bash
-# Generate a secure key
-python -c "import secrets; print('sk-' + secrets.token_hex(32))"
+`api_keys.yaml`:
+```yaml
+keys:
+  - caller_key: "sk-abc123"
+    openai_key: "sk-openai-xyz"
 ```
+
+Generate key: `python -c "import secrets; print('sk-' + secrets.token_hex(32))"`
 
 ## API Reference
 
-### Health Check
-
+Health check:
 ```bash
-curl http://localhost:8000/health
+curl http://localhost:8340/health
 ```
 
-Response: `{"status": "healthy"}`
-
-### List Models
-
+List models:
 ```bash
-curl http://localhost:8000/v1/models \
+curl http://localhost:8340/v1/models \
   -H "Authorization: Bearer sk-your-api-key"
 ```
 
-### Chat Completion
-
+Chat completion (requires workflow implementation):
 ```bash
-curl http://localhost:8000/v1/chat/completions \
+curl http://localhost:8340/v1/chat/completions \
   -H "Authorization: Bearer sk-your-api-key" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "default_workflow",
-    "messages": [{"role": "user", "content": "Hello!"}]
+    "messages": [{"role": "user", "content": "Hello"}]
   }'
 ```
 
-## Implementing Your Workflow
+## Implementing Workflows
 
-Edit `src/skeleton_open_ai/workflow.py` to implement your AI logic:
+Drop Python file in `workflows/`. Module must export:
 
 ```python
-def run_workflow(messages: list[ChatMessage], model: str) -> str:
-    """
-    Implement your AI workflow here.
-    
-    Args:
-        messages: The conversation history from the request
-        model: The model name requested by the client
-        
-    Returns:
-        The assistant's response as a string
-    """
-    # Your implementation here
-    return "Your response"
+from workflow_open_ai.context import WorkflowContext
+
+async def run(ctx: WorkflowContext) -> str:
+    # ctx.body: parsed JSON request body
+    # ctx.headers: request headers
+    # ctx.query_params: URL query params
+    # ctx.caller_key: authenticated API key
+    # ctx.key_entry: full key entry (dict)
+    return "response"
 ```
+
+Optional: `MODEL_NAME = "custom_name"` to override filename.
 
 ## Development
 
-### Running Tests
-
 ```bash
-uv run pytest
+uv run pytest                          # Run tests
+uv run mypy src tests                  # Type check
+uv run ruff check src                  # Lint
+uv run ruff format src                 # Format
+uv run pre-commit run --all-files      # All hooks
 ```
 
-### Type Checking
+## Environment
 
-```bash
-uv run mypy src tests
-```
-
-### Linting
-
-```bash
-uv run ruff check src tests
-```
-
-### Format Code
-
-```bash
-uv run ruff format src tests
-```
-
-### Run All Pre-commit Hooks
-
-```bash
-uv run pre-commit run --all-files
-```
-
-## Environment Variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `CONFIG_PATH` | `config.yml` | Path to configuration file |
-| `LOG_LEVEL` | `INFO` | Logging level (DEBUG, INFO, WARNING, ERROR) |
-| `API_PORT` | `8000` | Port for Docker Compose |
+| Var | Default | Purpose |
+|-----|---------|---------|
+| `CONFIG_PATH` | `config.yaml` | Config file |
+| `LOG_LEVEL` | `INFO` | Log level |
 
 ## License
 
