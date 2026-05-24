@@ -104,6 +104,21 @@ See `docs/ideation/workflow-as-models/`:
 - `spec-phase-2.md` - Phase 2 implementation details
 - `spec-phase-3.md` - Phase 3 implementation details
 
+## Phase 2 Breakdown
+
+Phase 2 splits into 4 sub-phases:
+
+**2a** — Foundation (context + schemas + default_workflow, no deps)
+**2b** — Discovery (scan workflows, build registry, no external deps)
+**2c** — Endpoints (models + chat routes, uses 2a+2b)
+**2d** — Integration (wire into main.py, uses all)
+
+Order: 2a (parallel OK) → 2b (parallel OK with 2a) → 2c (parallel OK) → 2d (last).
+
+See `docs/ideation/workflow-as-models/phase-2-breakdown.md` for tasks per phase.
+
+See `docs/ideation/workflow-as-models/phase-2-clarifications.md` for design questions + answers.
+
 ## Next Step
 
-Implement Phase 2 per `spec-phase-2.md`. Start with `discovery.py` and `context.py`.
+Start Phase 2a: `context.py`, `schemas.py`, `default_workflow.py`.
