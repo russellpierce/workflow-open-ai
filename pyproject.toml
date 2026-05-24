@@ -75,6 +75,10 @@ files = ["src/workflow_open_ai", "tests"]
 module = "uvicorn.*"
 ignore_missing_imports = true
 
+[[tool.mypy.overrides]]
+module = "pydantic"
+ignore_missing_imports = true
+
 # Pytest configuration
 [tool.pytest.ini_options]
 testpaths = ["tests"]
