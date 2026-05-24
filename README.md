@@ -1,5 +1,7 @@
 # workflow-open-ai
 
+**AI-authored. Human review + editing of documentation. Only included tests and scripts tested.**
+
 FastAPI server exposing OpenAI-compatible API for custom workflows. Each workflow file in `workflows/` auto-registers as a model.
 
 ## Features
