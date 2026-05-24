@@ -1,13 +1,19 @@
+# Workflow OpenAI Configuration
+
+# Server binding configuration
 server:
-  host: "0.0.0.0"
-  port: 8340
+  host: "0.0.0.0"  # Listen on all interfaces (0.0.0.0) or specific IP (e.g., 127.0.0.1)
+  port: 8340       # HTTP port (override: docker-compose $API_PORT or environment $PORT)
 
+# Authentication configuration
 auth:
-  api_keys_file: "api_keys.yaml"
+  api_keys_file: "api_keys.yaml"  # Path to API keys file (required, see api_keys.yaml.example)
 
-# Directory containing workflow Python files (auto-discovered at startup)
-workflows_dir: "./workflows"
+# Workflow discovery configuration
+workflows_dir: "./workflows"  # Directory to scan for Python workflow files at startup
+                              # Files must export: async def run(ctx: WorkflowContext) -> str
 
+# CORS configuration (allow cross-origin requests)
 cors:
   allow_origins:
-    - "*"
+    - "*"  # Allow all origins (restrict to specific domains in production, e.g., ["https://example.com"])
