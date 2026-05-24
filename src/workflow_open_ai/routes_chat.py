@@ -20,7 +20,7 @@ def create_chat_router(
     """Create router for POST /v1/chat/completions endpoint."""
     router = APIRouter(tags=["chat"])
 
-    @router.post("/v1/chat/completions")  # type: ignore[untyped-decorator]
+    @router.post("/v1/chat/completions")
     async def chat_completions(
         request: Request,
         api_key: str = Depends(auth_dependency),

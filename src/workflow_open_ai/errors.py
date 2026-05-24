@@ -10,7 +10,7 @@ from pydantic import BaseModel
 logger: Final = logging.getLogger(__name__)
 
 
-class ErrorDetail(BaseModel):  # type: ignore[misc]
+class ErrorDetail(BaseModel):
     """OpenAI-compatible error detail."""
 
     message: str
@@ -18,7 +18,7 @@ class ErrorDetail(BaseModel):  # type: ignore[misc]
     code: str
 
 
-class ErrorResponse(BaseModel):  # type: ignore[misc]
+class ErrorResponse(BaseModel):
     """OpenAI-compatible error response."""
 
     error: ErrorDetail
@@ -114,5 +114,5 @@ async def validation_error_handler(
 
 def register_error_handlers(app: FastAPI) -> None:
     """Register all error handlers with the FastAPI application."""
-    app.add_exception_handler(OpenAICompatibleError, openai_compatible_error_handler)
-    app.add_exception_handler(RequestValidationError, validation_error_handler)
+    app.add_exception_handler(OpenAICompatibleError, openai_compatible_error_handler)  # type: ignore[arg-type]
+    app.add_exception_handler(RequestValidationError, validation_error_handler)  # type: ignore[arg-type]

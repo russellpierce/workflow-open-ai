@@ -23,9 +23,7 @@ def test_discover_workflows_single_workflow() -> None:
     """Discovers single workflow file."""
     with tempfile.TemporaryDirectory() as tmpdir:
         wf_file = Path(tmpdir) / "simple.py"
-        wf_file.write_text(
-            "def run(ctx):\n    return 'test'\n"
-        )
+        wf_file.write_text("def run(ctx):\n    return 'test'\n")
         registry = discover_workflows(tmpdir)
         assert registry.model_names == ["simple"]
 
@@ -34,9 +32,7 @@ def test_discover_workflows_with_model_name() -> None:
     """Uses MODEL_NAME attribute when present."""
     with tempfile.TemporaryDirectory() as tmpdir:
         wf_file = Path(tmpdir) / "my_workflow.py"
-        wf_file.write_text(
-            'MODEL_NAME = "custom_name"\ndef run(ctx):\n    return "test"\n'
-        )
+        wf_file.write_text('MODEL_NAME = "custom_name"\ndef run(ctx):\n    return "test"\n')
         registry = discover_workflows(tmpdir)
         assert registry.model_names == ["custom_name"]
 
@@ -54,9 +50,7 @@ def test_discover_workflows_invalid_model_name() -> None:
     """Invalid MODEL_NAME (non-string) raises RuntimeError."""
     with tempfile.TemporaryDirectory() as tmpdir:
         wf_file = Path(tmpdir) / "bad.py"
-        wf_file.write_text(
-            "MODEL_NAME = 123\ndef run(ctx):\n    return 'test'\n"
-        )
+        wf_file.write_text("MODEL_NAME = 123\ndef run(ctx):\n    return 'test'\n")
         with pytest.raises(RuntimeError, match="MODEL_NAME must be a non-empty string"):
             discover_workflows(tmpdir)
 
