@@ -8,11 +8,11 @@ logger: Final = logging.getLogger(__name__)
 router: Final = APIRouter(tags=["health"])
 
 
-class HealthResponse(BaseModel):
+class HealthResponse(BaseModel):  # type: ignore[misc]
     status: str = "healthy"
 
 
-@router.get("/health", response_model=HealthResponse)
+@router.get("/health", response_model=HealthResponse)  # type: ignore[untyped-decorator]
 def health_check() -> HealthResponse:
     """Health check endpoint. No authentication required."""
     logger.debug("Health check requested")

@@ -8,9 +8,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from workflow_open_ai import __version__
 from workflow_open_ai.auth import create_auth_dependency
 from workflow_open_ai.config import AppConfig, load_config
+from workflow_open_ai.discovery import discover_workflows
 from workflow_open_ai.errors import register_error_handlers
 from workflow_open_ai.key_config import build_key_lookup, load_api_keys_config
+from workflow_open_ai.routes_chat import create_chat_router
 from workflow_open_ai.routes_health import router as health_router
+from workflow_open_ai.routes_models import create_models_router
 
 # Configure logging
 LOG_LEVEL: Final = os.environ.get("LOG_LEVEL", "INFO").upper()
@@ -50,12 +53,17 @@ app.add_middleware(
 # Register error handlers
 register_error_handlers(app)
 
+# Discover workflows
+registry = discover_workflows(config.workflows_dir)
+
 # Register routes
+app.include_router(create_models_router(registry, auth_dependency))
+app.include_router(create_chat_router(registry, key_lookup, auth_dependency))
 app.include_router(health_router)
 
 logger.info(f"Server configured: {config.server.host}:{config.server.port}")
 logger.info(f"CORS origins: {config.cors.allow_origins}")
-logger.info(f"Workflows dir: {config.workflows_dir}")
+logger.info(f"Discovered workflows: {registry.model_names}")
 
 
 def run() -> None:

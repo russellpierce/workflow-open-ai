@@ -9,26 +9,26 @@ from pydantic import BaseModel, Field
 logger: Final = logging.getLogger(__name__)
 
 
-class ServerConfig(BaseModel):
+class ServerConfig(BaseModel):  # type: ignore[misc]
     """Server binding configuration."""
 
     host: str = "0.0.0.0"
     port: int = Field(default=8340, ge=1, le=65535)
 
 
-class AuthConfig(BaseModel):
+class AuthConfig(BaseModel):  # type: ignore[misc]
     """Authentication configuration."""
 
     api_keys_file: str
 
 
-class CorsConfig(BaseModel):
+class CorsConfig(BaseModel):  # type: ignore[misc]
     """CORS configuration."""
 
     allow_origins: list[str] = Field(default_factory=lambda: ["*"])
 
 
-class AppConfig(BaseModel):
+class AppConfig(BaseModel):  # type: ignore[misc]
     """Complete application configuration."""
 
     server: ServerConfig = Field(default_factory=ServerConfig)
