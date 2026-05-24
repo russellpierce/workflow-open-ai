@@ -9,7 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 logger: Final = logging.getLogger(__name__)
 
 
-class ApiKeyEntry(BaseModel):
+class ApiKeyEntry(BaseModel):  # type: ignore[misc]
     """Single API key mapping. Extra fields are preserved and passed to workflows."""
 
     model_config = ConfigDict(extra="allow")
@@ -18,7 +18,7 @@ class ApiKeyEntry(BaseModel):
     openai_key: str = ""
 
 
-class ApiKeysConfig(BaseModel):
+class ApiKeysConfig(BaseModel):  # type: ignore[misc]
     """Root configuration from api_keys.yaml."""
 
     keys: list[ApiKeyEntry] = Field(min_length=1)
